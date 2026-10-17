@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- THIS IS LIKE 90% NOT AI I MADE THE NOTES MYSELF MB IF THEY LOOK LIKE AI -->
+<!-- I only made the notes because I get lost way too easily in my own code...-->
+
+<head>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page Settings -->
+    <title>Choose Your Own Story</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <dialog id="restart-pop-up">
+        <h1><b>Warning!</b></h1>
+        <p>This will restart ALL of your progress on the story and will not save your progress.</p>
+        
+        <form method="dialog">
+            <button value="cancel">Cancel</button>
+            <button id="continueRestart" value="continue">Continue</button>
+        </form>
+    </dialog>
+
+    <dialog id="notAdded">
+        <h1><b>Aw, man...</b></h1>
+        <p>This feature doesn't exist yet. The creator might change that, if he feels like it.</p>
+        
+        <form method="dialog">
+            <button value="cancel">Cancel</button>
+        </form>
+    </dialog>
+
+    <!-- Top Left Hud Menu -->
+    <div class="hud-menu" id="hud-left">
+        <!-- Health Display -->
+        <p>Health: <span id="health-display">100</span> / <span id="max-health-display">100</span></p>
+        <div class="bar">
+            <div class="fill" id="fill-health"></div>
+        </div>
+        
+        <br> <!-- Line break for seperation -->
+
+        <!-- EXP Display -->
+        <p>EXP: <span id="xp-display">0</span> / <span id="max-xp-display">100</span></p>
+        <div class="bar" id="xpShi">
+            <span class="level-text"><strong>Level</strong> <span id="level">1</span></span>
+            <div class="fill" id="fill-xp"></div>
+        </div>
+    </div>
+
+
+    <!-- Top Right Hud Menu -->
+    <div class="hud-menu" id="hud-right">
+
+        <h1 class="BIGGER"><b>Controls:</b></h1>
+        <p class="middle">Work in progress. Only restart reverts progress.</p>
+        <div class="controlButtons">
+            <button type="button" class="controlButton" id="back">
+                <img src="resources/back.png" alt="Back" width="100" height="100">
+            </button>
+
+            <button type="button" class="controlButton" id="restart">
+                <img src="resources/restart.png" alt="Restart" width="100" height="100">
+            </button>
+
+            <button type="button" class="controlButton" id="forward">
+                <img src="resources/forward.png" alt="Forward" width="100" height="100">
+            </button>
+
+            <button type="button" class="controlButton" id="toFront">
+                <img src="resources/toFront.png" alt="Go to Front" width="100" height="100">
+            </button>
+        </div>
+
+        <!-- Effects Menu -->
+        <!-- <div>
+            <p>Effects:</p>
+            <p style="font-weight: lighter;"><em><span id="effectNullDisplay">No effects to show.</span></em></p>
+            <div class="effects-columns">
+                <div class="effects-column">
+                    <p class="effects-column-title goodStatusChange">Good</p>
+                    <ul id="goodEffectsDisplay"></ul>
+                </div>
+                <div class="effects-column">
+                    <p class="effects-column-title badStatusChange">Bad</p>
+                    <ul id="badEffectsDisplay"></ul>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        
+        <div id="inventoryDiv">
+            <p>Inventory:</p>
+
+            <p style="font-weight: lighter;"><em><span id="invNullDisplay">Nothing in your inventory.</span></em></p>
+            <ul id="inventoryDisplay"></ul>
+        </div> -->
+    </div>
+
+
+    <!-- TEMPLATE FOR CHOICE BUTTONS -!>
+        <input type="button" class="choice-btn"
+
+            data-luck="true"                                                      - Is the option chance-based? (true/false)
+            data-chance="15"                                                      - What is the chance of the option succeeding? (int/float) (only works if data-luck is true)
+            data-success="story2_dodge_succeed"                                   - The id of where to proceed if the option succeeds. (string) (uses this if option is not chance based)
+            data-fail="story2_dodge_fail"                                         - The id of where to proceed if the option fails. (string) (only works if chance based)
+            data-success-trigger='[
+                                    {"action":"takeDamage","args":[10]},
+                                    {"action":"givePlayerXP","args":[20]}
+                                ]'                                                - The function(s) to trigger if the option succeeds. (string) (uses this if option is not chance based)
+            data-fail-trigger='[
+                                    {"action":"takeDamage","args":[10]},
+                                    {"action":"givePlayerXP","args":[20]}
+                                ]'                                                - The function(s) to trigger if the option fails. (string) (only works if chance based)
+
+            value="Dodge (15% chance to succeed)"                                 - The text to be displayed on the button. (string) (chance percentage not automatically included if using chance)
+        >
+    -->
+
+    <!-- Main Story/Game (yes the remaining 1000 lines are all story) -->
+    <div id="game">
+
+        <!-- Menu -->
+        <div id="startBox">
+            <h1>Choose Your Own Adventure</h1>
+            <input type="button" id="startButton" value="Start Story">
+        </div>
+
+        <!--First story choice-->
+        <div id="story1" class="story" style="display: none;">
+            <p>
+                England, late 16th century.
+                After a long day travelling between villages, you and your
+                horse are exhausted. As night falls, you stop at a tavern
+                for a hot meal and a place to rest.
+                While waiting for your supper, the warmth of the fire and
+                the murmur of conversation make your eyelids heavy.
+                Before long, you fall asleep at your table.
+                CRACK!
+                A sharp pain shoots through your forehead. You wake with
+                a start as a metal spoon clatters onto the table in front of
+                you. Laughter echoes around the tavern.
+                Someone has thrown a spoon at your head.
+                As you rub the sore spot on your forehead, you notice a
+                stranger across the room grinning at you. What do you do?
+            </p>
+            <div>
+                <!-- data-next points to the ID of the next scene -->
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_a"
+                    data-fail=""
+                    data-success-trigger=''
+                    data-fail-trigger=''
+
+                    value="Confront Him"
+                >
+
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b"
+                    data-fail=""
+                    data-success-trigger='[
+                                            {"action":"givePlayerXP","args":[30]}
+                                        ]'
+                    data-fail-trigger=''
+
+                    value="Ignore Him"
+                >
+            </div>       
+        </div>
+
+
+
+        <!-- Second Story Choice -->
+
+        <!-- Option A -->
+        <div id="option_a" class="story" style="display: none;">
+                <p>
+                    You decide to confront the stranger. In a tavern like this,
+                    an insult cannot go unanswered. If you let it slide, you risk
+                    losing the respect of the crowd, and with a rough bunch
+                    like this, a lack of respect can lead to far greater trouble
+                    before the night is over. You rise from your chair. The
+                    tavern grows quieter as nearby patrons notice your angry
+                    stance. You look at the stranger and start walking towards
+                    him…
+                </p>
+
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_a_1"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Go looking for a fight"
+                >
+
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_a_2"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Try an amicable resolution"
+                >
+        </div>
+
+        <div class="story" id="option_a_2" style="display:none;">
+            <p>
+                With your forehead still throbbing, you make your way towards the stranger, keeping
+                your eyes fixed on him.
+                <br>
+                <br>
+                "This is not quite the welcome I was expecting in your village," you say mildly.
+                <br>
+                <br>
+                The man rises from his chair, still looking hostile, but confused by your reaction. But
+                the moment he gets a good look at you, his expression changes completely. The
+                hostility drains completely from his face, replaced by embarrassment.
+                <br>
+                <br>
+                "My apologies, stranger," he says. "My eyesight is not what it once was. I mistook you
+                for Goldfinger Gregor, the village goldsmith." The tavern erupts into laughter; the
+                man blushes and lowers his head. "You see, Gregor and I have an ongoing
+                disagreement. He refuses to return a precious bow and quiver of arrows that
+                belonged to my late father." He sighs and shakes his head. "When I saw you asleep
+                by the fire, I thought I'd finally have my revenge."
+                <br>
+                <br>
+                He pauses and looks at you apologetically. "Clearly, I chose the wrong man. The
+                next round is on me, sit down and I will tell you more about my troubles with Gregor,
+                my name is William."
+                <br>
+                <br>
+                The stranger gestures to the empty seat opposite him, while a fresh pint is placed.
+                "My wife says I should stop quarrelling with the goldsmith and instead search for the
+                evidence proving the bow belongs to my family," he says. "But every time I see
+                Gregor's smug face, I feel more inclined to knock out his teeth than search through
+                old papers."
+                <br>
+                <br>
+                The tavern patrons chuckle knowingly. "Tell me, traveller," he says, leaning forward.
+                "What would you do in my position?"
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_a_2_a"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Help Gregory prove ownership of the quiver"
+            >
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_a_2_b"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Help William beat Gregory up"
+            >
+        </div>
+
+        <div class="story" id="option_a_2_b" style="display:none;">
+            <p>
+                You have heard one too many stories of greedy
+                goldsmiths who, after years have passed, conveniently
+                "forget" who owns the precious items left in their safes.
+                <br>
+                <br>
+                More than one hardworking family has been deprived of
+                its inheritance by a craftsman hiding behind missing
+                records and convenient excuses.
+                <br>
+                <br>
+                Besides, William strikes you as an honest man. He seems
+                genuinely distressed by the loss of his father's heirloom,
+                and you have little reason to doubt his word.
+                <br>
+                <br>
+                You glance at William. Despite his determination, he is
+                not an imposing figure.
+                <br>
+                <br>
+                "I will come with you," you declare. "I would be honoured
+                to help you confront this greedy bastard and settle the
+                matter." William's face lights up.
+                <br>
+                <br>
+                "Thank you, friend. Let us be there tomorrow, first thing in
+                the morning. As a token of my gratitude, I promise three of
+                the golden arrows, if we can get the quiver back. They are
+                each worth a small fortune in themselves; but first let me
+                buy you some more pints."
+                <br>
+                <br>
+                The next morning, the two of you make your way to
+                Gregory Goldfinger's workshop. The sound of hammering
+                echoes into the street long before you reach the door.
+                Inside, Gregory is bent over an anvil, shaping a glowing
+                piece of iron. When he notices William, he lets out an
+                exasperated groan. "Oh, for heaven's sake, William. You
+                again?". He sets down his hammer.
+                <br>
+                <br>
+                "I have already told you a dozen times. I cannot hand over
+                the quiver based solely on your word. Only an idiot would
+                entrust such a valuable heirloom to a man who cannot
+                produce a shred of evidence proving it belongs to him."
+                Gregory's eyes move towards you. He snorts. "And who
+                might this be? Your bodyguard? Get out of my workshop,
+                you and your moron-looking friend."
+                <br>
+                <br>
+                Your reaction is immediate. Before reason has a chance
+                to intervene, your fist shoots forward.
+                <br>
+                <br>
+                CRACK!
+                <br>
+                <br>
+                The punch lands squarely on Gregory's nose.
+                The goldsmith staggers backwards, clutching his face in
+                shock, blood begins to drip from his face.
+                <br>
+                <br>
+                For a moment, the workshop falls completely silent.
+                Then, from outside, a voice shouts: "Fight! Fight at the
+                goldsmith's!".
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance="0"
+                    data-success="option_a_2_b_1"
+                    data-fail=""
+                    data-success-trigger='[
+                                        {"action":"takeDamage","args":[10]}
+                                    ]'
+                    data-fail-trigger=""
+
+                    value="Run for your life"
+            >
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance="0"
+                    data-success="option_a_2_b_2"
+                    data-fail=""
+                    data-success-trigger='[
+                                        {"action":"givePlayerXP","args":[25]}
+                                    ]'
+                    data-fail-trigger=""
+
+                    value="Stay and ready for a fight"
+            >
+        </div>
+
+        <div class="story" id="option_a_2_b_2" style="display:none;">
+            <p>
+                Within moments, the workshop descends into chaos.
+                <br>
+                <br>
+                Villagers pour through the doorway to protect Gregory and
+                his workshop, which not only serves as his place of
+                business but also safeguards the savings and valuables of
+                many families in Greenward. Voices rise, insults,
+                accusations, and threats fly through the air, shoves are
+                exchanged, a stool topples over, someone breaks a
+                lantern....the situation is rapidly spiralling out of control.
+                <br>
+                <br>
+                You brace yourself for the fight of your life. Then,
+                suddenly, a commanding voice cuts through the uproar.
+                <br>
+                <br>
+                "WHAT IS ALL THIS COMMOTION?"
+                <br>
+                <br>
+                The room falls silent. The village constable has arrived.
+                <br>
+                <br>
+                Tall, broad-shouldered, and stern-faced, he steps into the
+                workshop with an authority that immediately commands
+                respect. Gregory is the first to speak: red-faced and still
+                clutching his injured nose, he angrily recounts the events
+                that led to the disturbance. William attempts to interrupt,
+                but the constable silences both men with a raised hand.
+                <br>
+                <br>
+                "Enough." The single word echoes through the workshop.
+                <br>
+                <br>
+                "This quarrel has disturbed the peace of my village for far
+                too long." He turns to William.
+                <br>
+                <br>
+                "You cannot claim ownership of such a valuable artefact
+                without evidence. No document supports your claim, and
+                nobody in Greenward remembers your family possessing
+                the quiver." Then he faces Gregory.
+                <br>
+                <br>
+                "But neither can you truly claim it as your own. The quiver
+                has remained in your possession for over fifty years
+                without a proven owner."
+                <br>
+                <br>
+                The constable pauses before delivering his judgement.
+                "Therefore, I order that neither of you shall possess it."
+                "The quiver shall become the property of the village of
+                Greenward."
+                <br>
+                <br>
+                "It will be placed in the church, displayed within a glass
+                cabinet, where it shall remain safe and where every
+                resident and traveller may admire it."
+                <br>
+                <br>
+                For the first time that day, neither William nor Gregory has
+                a reply.
+                <br>
+                <br>
+                The constable's decision is final.
+                <br>
+                <br>
+                A few days later, the ancient quiver is proudly displayed in
+                the village church. Before long, travellers begin arriving
+                from distant towns to admire the remarkable artefact and
+                hear the story of the dispute that nearly tore Greenward
+                apart.
+                <br>
+                <br>
+                The village prospers from the attention.
+                <br>
+                <br>
+                As for you, you soon complete the final stretch of your
+                journey and return home. Though William never recovered
+                his father's heirloom, and Gregory never retained
+                possession of it, the quarrel finally came to an end.
+                <br>
+                <br>
+                And for years afterwards, you are remembered as the
+                traveller whose intervention ultimately brought peace,
+                and a bit of fame, to the small village of Greenward.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_2_b_1" style="display:none;">
+            <p>
+                Suddenly, people begin pouring into the workshop.
+                <br>
+                <br>
+                You had not expected a goldsmith to be so popular, but
+                apparently half the village has dropped whatever they
+                were doing and rushed over to help Gregory deal with his
+                attackers. Within moments, the workshop descends into
+                chaos. A fist catches you on the cheek, another one lands
+                somewhere near your ear.
+                <br>
+                <br>
+                Before you know it, you are in the middle of a full-blown
+                brawl....You quickly assess the situation: the numbers are
+                not in your favour, and as much as you would like to help
+                William recover his father's heirloom, you had not
+                anticipated the possibility of being beaten to death by an
+                angry mob.
+                <br>
+                <br>
+                The entrance is completely blocked. Villagers are shoving,
+                yelling, and swinging wildly. There is no chance of
+                reaching the door. Then you spot salvation: a small
+                window above a washing sink.
+                <br>
+                <br>
+                Without hesitation, you drop to the floor and begin
+                crawling between the combatants' legs, while the battle
+                grows ever more confusing.
+                <br>
+                <br>
+                You reach the wall, drag a chair beneath the window, and
+                scramble upwards. It is a tight fit, but with considerable
+                eƯort, you squeeze through the opening and tumble into
+                the alley outside. Freedom! You immediately break into a
+                sprint. Soon, you reach the tavern stables, where your
+                faithful horse is still waiting.
+                <br>
+                <br>
+                You pause only long enough to catch your breath before
+                mounting up.
+                <br>
+                <br>
+                Your journey has been long and dangerous, home is now
+                less than a day's ride away, no matter how sorry you feel
+                for William, there is no chance you are risking your neck
+                for a complete stranger and a couple of golden arrows;
+                better to arrive home empty-handed than not arrive home
+                at all.
+                <br>
+                <br>
+                With that comforting thought, you turn your horse towards
+                the road and ride away, leaving William, Gregory, the
+                golden quiver, and the increasingly violent village behind.
+                "Who knows? Perhaps one day, news carried by travellers
+                and tavern gossip will bring you word of William and his
+                golden quiver's fate."
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_2_a" style="display:none;">
+            <p>
+                After speaking with William at length, you decide to help
+                him: he seems like an honest man, and his frustration
+                appears genuine. It strikes you as a cruel irony that his
+                late father entrusted the precious quiver and arrows to
+                the village goldsmith for safekeeping, only for them to
+                remain out of reach of his own family after his death.
+                <br>
+                <br>
+                The following morning, you accompany William to the
+                workshop of Gregory Goldfinger.
+                <br>
+                <br>
+                The goldsmith listens patiently as William once again
+                demands the return of his father's belongings.
+                <br>
+                <br>
+                When William finishes, Gregory lets out a sigh and
+                unlocks a heavy iron safe. From within, he carefully
+                removes an old leather quiver decorated with silver
+                engravings and accompanied by a finely crafted set of
+                arrows.
+                <br>
+                <br>
+                "It is the oldest item in my possession," Gregory explains.
+                "My father, Sir Goldfinger, accepted it for safekeeping
+                many years ago. Shortly afterwards, he passed away.
+                <br>
+                <br>
+                Unfortunately, he left no record identifying its rightful
+                owner."
+                <br>
+                <br>
+                William clenches his fists, but Gregory continues calmly.
+                "I would gladly return this quiver to its true owner. It is a
+                valuable family heirloom, and I have no desire to keep
+                what does not belong to me. But neither can I hand such a
+                treasure to a stranger without proof."
+                <br>
+                <br>
+                The goldsmith folds his arms. "Bring me evidence, and the
+                quiver is yours."
+                <br>
+                <br>
+                As a merchant, you have often found yourself involved in
+                disputes over ownership. You know that not every claim
+                can be supported by documents. Sometimes the truth
+                must be established through witnesses, reputation, and
+                local knowledge. Somewhere in this village, there may
+                still be people who remember William's father and the
+                circumstances under which the quiver was entrusted to
+                the Goldfingers.
+                <br>
+                <br>
+                You turn to William: "I believe we can prove it belongs to
+                your family," you say. "But we shall need to find the right
+                witnesses."
+                <br>
+                <br>
+                Now the search for the truth begins.
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="true"
+                    data-chance="50"
+                    data-success="option_a_2_a_1"
+                    data-fail="option_a_2_a_2"
+                    data-success-trigger='[
+                                        {"action":"givePlayerXP","args":[50]}
+                                    ]'
+                    data-fail-trigger=""
+
+                    value="Begin the search"
+            >
+        </div>
+
+        <div class="story" id="option_a_2_a_1" style="display:none;">
+            <p>
+                As soon as you leave the goldsmith's workshop, you and William
+                sit beneath the shade of a great oak tree. You ask him to tell you
+                everything he knows about the heirloom. William takes a deep
+                breath.
+                <br>
+                <br>
+                "My late mother always told me that my father was awarded the
+                quiver by the King in recognition of his courage during the Battle
+                of the Castles. When he returned to Greenward, he feared our
+                home was not safe enough to protect such a valuable treasure.
+                <br>
+                <br>
+                He entrusted it to the Goldfingers for safekeeping. Soon
+                afterwards, he was called away to fight at the Battle of Green
+                Castle, where he was killed."
+                <br>
+                <br>
+                You think for a moment. "If that is true," you say, "we must find
+                someone who fought beside your father."
+                <br>
+                <br>
+                William lowers his head. "All the soldiers who served with him
+                are long dead...". He suddenly pauses. "Unless..."
+                <br>
+                <br>
+                "There is an old hermit who lives in a cave on Mount Blue. The
+                villagers say he keeps to himself and dislikes visitors, but he is
+                old enough to have known my father."
+                <br>
+                <br>
+                It is your only lead. After a long and exhausting climb, you finally
+                reach the cave. The old man who greets you is untidy, grumpy,
+                and clearly unimpressed by unexpected visitors. "What do you
+                want?" he grumbles.
+                <br>
+                <br>
+                But as soon as he looks at William, his expression softens. "Your
+                face..." he whispers. "It reminds me of Sir William Fright—the
+                bravest man I ever fought beside."
+                <br>
+                <br>
+                When William explains that Sir William Edmund Fright was his
+                father, the hermit's eyes fill with emotion.
+                <br>
+                <br>
+                "I never thought I would meet my old friend's son."
+                <br>
+                <br>
+                You explain the dispute over the quiver. The old man smiles.
+                "There is no need to search any further. I witnessed the King
+                presenting that quiver to your father with my own eyes. I shall
+                gladly tell Gregory everything I know."
+                <br>
+                <br>
+                Together, the three of you return to the goldsmith's workshop.
+                Gregory listens carefully as the old soldier recounts the story of
+                the battles and the King's reward.
+                <br>
+                <br>
+                When he has finished, the hermit adds one final detail.
+                <br>
+                <br>
+                "Before presenting the quiver, the King's armourer engraved Sir
+                William Fright's initials beneath the leather binding using a
+                secret technique known only to the royal craftsmen. The mark is
+                almost invisible... unless viewed through blue glass."
+                <br>
+                <br>
+                Gregory's eyes widen. Without hesitation, he unlocks his safe
+                and carefully removes the ancient quiver.
+                <br>
+                <br>
+                Taking a piece of blue glass from his workbench, he holds it over
+                the base of the quiver and turns it towards the light. Slowly, three
+                faint letters appear S.W.E. F. For a moment, nobody speaks.
+                <br>
+                <br>
+                Then Gregory smiles. "There can be no doubt." He gently places
+                the heirloom into William's hands. "It has finally returned to its
+                rightful owner." The mystery that had divided Greenward for so
+                many years is at last resolved. William recovers his father's
+                treasured heirloom.
+                <br>
+                <br>
+                The old hermit returns peacefully to his beloved cave. Gregory
+                earns the respect of the village for doing what is right. And you
+                continue the final stage of your journey home, satisfied that, on
+                this occasion, truth and patience proved stronger than anger
+                and suspicion.
+
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_2_a_2" style="display:none;">
+            <p>
+                Outside the goldsmith's workshop, you and William
+                immediately begin planning how to prove that the
+                heirloom truly belongs to his family. Your first idea is to
+                seek out the oldest villagers, hoping that one of them
+                might remember Sir William Fright or the circumstances
+                under which the quiver was entrusted to the Goldfingers.
+                <br>
+                <br>
+                The task proves harder than expected. Some elderly
+                villagers shut their doors before you can even explain your
+                purpose. Others listen politely but simply shake their
+                heads. Many have heard William's story countless times
+                over the years and dismiss it as nothing more than the
+                fantasy of a desperate man. Before long, you realise that
+                the entire village believes William's claim to be nothing
+                more than a legend.
+                <br>
+                <br>
+                Days turn into weeks. You search old records, question
+                travellers, and follow every lead you can find. Each one
+                ends in disappointment. At last, with heavy hearts, you
+                and William return to Gregory Goldfinger's workshop.
+                <br>
+                <br>
+                "I am sorry," you say. "We have failed. We cannot prove
+                the quiver belongs to William's family."
+                <br>
+                <br>
+                Gregory remains silent for a moment before unlocking his
+                safe and gently removing the ancient quiver.
+                <br>
+                <br>
+                "I never wished to keep it for myself," he says quietly. "But
+                neither could I hand it over without proof." He looks
+                thoughtfully at the heirloom.
+                <br>
+                <br>
+                "Since no one can establish its rightful owner, I believe
+                there is only one fair solution."
+                <br>
+                <br>
+                The following Sunday, the quiver is presented to the
+                church, where it is placed on display for all the people of
+                Greenward—and travellers from distant lands—to
+                admire.
+                <br>
+                <br>
+                A small plaque is placed beside it. It reads: "Believed to
+                have belonged to Sir William Fright, a soldier remembered
+                for his courage, though time has hidden the truth from
+                us."
+                <br>
+                <br>
+                William never recovers his father's heirloom, but he finds
+                comfort knowing that it will be preserved and respected
+                rather than forgotten in the back of a safe.
+                <br>
+                <br>
+                As for you, you continue your journey home with an
+                important lesson: not every mystery can be solved.
+                <br>
+                <br>
+                Sometimes, the truth is lost to history forever.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+        
+        <div id="option_b" class="story" style="display: none;">
+                <p>
+                    You decide to ignore the stranger and wait for your meal. You've been caught up in one too
+                    many pointless tavern brawls to rush into another, especially in a village so far from home.
+                    <br>
+                    <br>
+                    Besides, you're exhausted. All you want is a warm meal, a comfortable bed, and a peaceful
+                    night's rest. A few minutes later, a serving maid arrives carrying a steaming plate of food and
+                    a frothy pint of ale. As she sets them down before you, she gives you a warm smile. "Thank
+                    you," she says quietly. "Most men here would have started a fight over something like that.
+                    <br>
+                    <br>
+                    The innkeeper has enough troubles without another tavern brawl." She glances around to
+                    make sure no one is listening before leaning closer. "As a small favour, I'll give you a piece of
+                    advice. When it's time to retire for the night, ask for any room but Room 6." She then leaves
+                    you alone with your meal and a growing sense of unease.
+                </p>
+
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b_1"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Ask for Room 6"
+                >
+
+                <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b_2"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Avoid Room 6"
+                >
+        </div>
+
+        <div class="story" id="option_b_2" style="display:none;">
+            <p>
+                You decide to follow the maid's advice and ask for the only
+                room still available besides Room 6: the narrow and
+                secluded Room 4. The innkeeper raises an eyebrow. "Room 6
+                is still vacant," he says. "It's far more comfortable. Larger
+                bed, warmer fireplace, and a fine view of the road and the
+                forest beyond." You insist on Room 4 and grab the key.
+                <br>
+                <br>
+                Exhausted from your journey, you retire to your room and fall
+                asleep almost immediately.
+                <br>
+                <br>
+                Hours later, you awake with a strange sense of unease. The
+                tavern is silent. Unable to settle your mind, you decide to
+                check on your horse. Pulling on your boots, you quietly make
+                your way outside.
+                <br>
+                <br>
+                The night air is cold and still. As you approach the stables,
+                movement catches your eye. Further down the road, two
+                shadowy figures are crouched over a body lying motionless in
+                the dirt. Even from a distance, you can see the dark stain
+                spreading across the victim's chest and the handle of a knife
+                protruding from it. The man appears dead. The two figures
+                are rifling through his pockets and bags. You instinctively step
+                behind a fence post and watch. Then a shaft of moonlight
+                breaks through the clouds. It illuminates the face of one of
+                the figures. Your heart skips a beat, you recognise her
+                immediately: it is the serving maid.
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b_2_1"
+                    data-fail=""
+                    data-success-trigger=""
+                    data-fail-trigger=""
+
+                    value="Try to catch them"
+            >
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="true"
+                    data-chance="50"
+                    data-success="option_b_2_2_b"
+                    data-fail="option_b_2_2_a"
+                    data-success-trigger=''
+                    data-fail-trigger=""
+
+                    value="Mind your business"
+            >
+        </div>
+
+        <div class="story" id="option_b_2_2_a" style="display:none;">
+            <p>
+                For a few moments, you remain frozen behind the fence
+                post, scarcely believing what you have just witnessed, but
+                suddenly, everything suddenly makes sense. The maid
+                had insisted that you avoid Room 6 because Room 6
+                overlooks the road. Had you accepted that room, you
+                might have witnessed the crime from your window before
+                the murderers had time to flee. She had not been trying to
+                protect you, she had been protecting herself. You feel
+                played, but decide that the murder is none of your
+                business. Keeping well out of sight, you wait until the two
+                figures disappear into the darkness until peace and
+                silence return...
+                <br>
+                <br>
+                At first light, you saddle your horse and leave Greenward
+                without telling a soul what you witnessed.
+                <br>
+                <br>
+                You reach home safely, but peace never truly returns.
+                Some nights, you wake wondering whether the traveller
+                might have survived had you acted sooner... or whether
+                others later fell victim to the same killers. You escaped
+                Greenward unharmed. Your conscience, however, never
+                did.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_2_2_b" style="display:none;">
+            <p>
+                For a few moments, you remain frozen behind the fence
+                post, scarcely believing what you have just witnessed, but
+                suddenly, everything suddenly makes sense. The maid
+                had insisted that you avoid Room 6 because Room 6
+                overlooks the road. Had you accepted that room, you
+                might have witnessed the crime from your window before
+                the murderers had time to flee. She had not been trying to
+                protect you, she had been protecting herself. You feel
+                played, but decide that the murder is none of your
+                business. Keeping well out of sight, you wait until the two
+                figures disappear into the darkness until peace and
+                silence return...
+                <br>
+                <br>
+                You decide that the murder is none of your business.
+                <br>
+                <br>
+                Once the two figures disappear into the forest, you
+                cautiously approach the body. Among the bloodstained
+                belongings, you notice a leather purse and a silver pocket
+                watch that the killers have overlooked. After a moment's
+                hesitation, you slip them into your pack. "No point leaving
+                them here," you mutter to yourself. You leave Greenward
+                before sunrise.
+                <br>
+                <br>
+                Years later, the watch still sits in your home.
+                <br>
+                <br>
+                It keeps perfect time. Yet whenever you wind it, you
+                cannot help wondering whether it belonged to the
+                murdered traveller... and whether, in the end, you became
+                little better than the thieves you chose not to stop.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_2_1" style="display: none;">
+            <p>
+                For a few moments, you remain frozen behind the fence
+                post, scarcely believing what you have just witnessed.
+                <br>
+                <br>
+                Then everything suddenly makes sense. The maid had
+                insisted that you avoid Room 6. Why? Because Room 6
+                overlooks the road. Had you accepted that room, you
+                might have witnessed the crime from your window before
+                the murderers had time to flee. She had not been trying to
+                protect you, she had been protecting herself.
+                <br>
+                <br>
+                Anger begins to replace your fear. You had trusted her.
+                <br>
+                <br>
+                She had rewarded your peaceful nature with what
+                seemed like friendly advice, only to deceive you and use
+                you as an unwitting accomplice.
+                <br>
+                <br>
+                You glance back towards the tavern. The village constable
+                is asleep. By the time anyone discovers the body, the
+                killers will be long gone.
+                <br>
+                <br>
+                "No," you whisper to yourself. "They're not getting away
+                with this."
+                <br>
+                <br>
+                Keeping low behind the hedges, you quietly follow the two
+                figures as they drag the traveller's bags towards the edge
+                of the forest.
+                <br>
+                <br>
+                Fortunately, the darkness conceals you.
+                <br>
+                <br>
+                Soon they disappear beneath the trees, making their way
+                along a narrow path that seems familiar to them.
+                <br>
+                <br>
+                You tighten your grip on your knife, this is your chance.
+                <br>
+                <br>
+                If you can catch them—or at least discover where they are
+                hiding—you may be able to bring them to justice.
+                But one wrong step could reveal your presence.
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b_2_1_a"
+                    data-fail=""
+                    data-success-trigger='[
+                                        {"action":"takeDamage","args":[897352489754189714354358917435897453987054398078970589705341289705136975468715976831456743576043586970342587934125689703247854362587234658743265873246587324657832465782346578324658734265382475638247568732456827435638247563428975632487563248756324758]}
+                                    ]'
+                    data-fail-trigger=""
+
+                    value="Follow Them"
+            >
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="false"
+                    data-chance=""
+                    data-success="option_b_2_1_a"
+                    data-fail=""
+                    data-success-trigger='[
+                                        {"action":"givePlayerXP","args":[35894728973524358924703589247032458970543289703245897034528907354289703524807935248079243589072345897035248097352489073524809735248097352480973524809735624809765420778954747482957436797637689376983578937689576893078978376834678737576835487683476867865374967384896789735648970354897035468097356480973564809735468097356480973564897035645809735645480978932475897543254389272458972354897235897235897235897352897454878457820674896758495672384568749567483564382756324875643875643275864327643764923]}
+                                    ]'
+                    data-fail-trigger=""
+
+                    value="Alert the Constable"
+            >
+        </div>
+
+        <div class="story" id="option_b_2_1_a" style="display: none;">
+            <p>
+                Determined to bring the criminals to justice, you quietly
+                follow them into the forest, keeping a safe distance.
+                <br>
+                <br>
+                For a while, your plan seems to work. Then your foot
+                snaps a dry branch. The sound echoes through the silent
+                woods. The two figures stop.
+                <br>
+                <br>
+                Slowly, they turn around. The maid smiles.
+                <br>
+                <br>
+                "I told him someone was watching us," she whispers to
+                her companion. Before you can draw your knife, they rush
+                towards you. You fight bravely, but two against one is a
+                battle you cannot win. The forest falls silent once more.
+                <br>
+                <br>
+                The following morning, the villagers discover two bodies
+                on the road instead of one. No one ever learns who the
+                mysterious traveller was, nor why he lost his life in the
+                woods of Greenward.
+                <br>
+                <br>
+                Sometimes, courage without caution comes at the
+                highest price.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_2_1_b" style="display: none;">
+            <p>
+                Realising you cannot face two armed criminals alone, you
+                sprint back to the tavern and wake the village constable.
+                <br>
+                <br>
+                Within minutes, he and several villagers race to the scene.
+                <br>
+                <br>
+                The murderers are gone. However, they have abandoned
+                the victim's belongings in their haste to escape.
+                <br>
+                <br>
+                Thanks to your quick thinking, the authorities identify the
+                murdered traveller and begin a manhunt for the maid and
+                her accomplice, it will prove to be unsuccessful, but the
+                murderous couple will never be seen in Greenwalt again.
+                <br>
+                <br>
+                Although the killers are not caught, you leave the village
+                knowing that your courage prevented them from claiming
+                another victim.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+    
+        <div class="story" id="option_b_1" style="display: none;">
+            <p>
+                Despite the maid's warning, curiosity gets the better of
+                you. Determined to discover what is so special about
+                Room 6, you ask the innkeeper for the key.
+                <br>
+                <br>
+                He gives you a strange look but says nothing.
+                <br>
+                <br>
+                Once inside, you immediately wonder why anyone would
+                avoid the room. It is by far the finest chamber in the tavern:
+                spacious and warm, with a crackling fire in the fireplace, a
+                comfortable bed, and a large window overlooking the road
+                and the dark forest beyond.
+                <br>
+                <br>
+                After such a long journey, sleep comes quickly.
+                <br>
+                <br>
+                You are awakened shortly after midnight by a faint clicking
+                sound and the unmistakable noise of footsteps crossing
+                the room.
+                <br>
+                <br>
+                Your eyes snap open: someone is standing beside your
+                bed.
+                <br>
+                <br>
+                You leap to your feet and draw the knife you keep beneath
+                your pillow.
+                <br>
+                <br>
+                The figure chuckles: "A knife will do me no harm," he says.
+                "For I am not made of flesh and bone."
+                <br>
+                <br>
+                The feeble light from the almost extinguished fire reveals a
+                translucent old man dressed in ragged seafarer's clothes.
+                <br>
+                <br>
+                One of his legs is made entirely of wood.
+                <br>
+                <br>
+                "My name is Willy Wooden-Leg," he declares with a
+                theatrical bow. "I was once a pirate feared across every
+                coast of England. But my final years were spent in this very
+                building, back when it served as a prison."
+                <br>
+                <br>
+                The ghost's smile fades. "They tortured me for years,
+                demanding to know where my treasure was buried. Yet
+                they never learned the truth."
+                <br>
+                <br>
+                He points a ghostly finger at you.
+                <br>
+                <br>
+                "I have guarded that secret ever since. I shall reveal it only
+                to a person of noble character—someone willing to share
+                the treasure with my beloved daughter, Charlotte."
+                <br>
+                <br>
+                The pirate's spectral eyes narrow. "So tell me, traveller...
+                are you such a person?"
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance="0"
+                data-success="option_b_1_a"
+                data-fail=""
+                data-success-trigger='[
+                                            {"action":"givePlayerXP","args":[25]}
+                                        ]'
+                data-fail-trigger=''
+
+                value="Help the Ghost"
+            >
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance="0"
+                data-success="option_b_1_b"
+                data-fail=""
+                data-success-trigger='[
+                                            {"action":"takeDamage","args":[20]}
+                                        ]'
+                data-fail-trigger=''
+
+                value="Ignore the ghost"
+            >
+        </div>
+
+        <div class="story" id="option_b_1_b" style="display:none;">
+            <p>
+                You can hardly believe your eyes, or your ears...You have
+                travelled across kingdoms and sailed the Seven Seas.
+                You consider yourself a man of reason, knowledge, and
+                sharp judgement.
+                <br>
+                <br>
+                Ghosts do not exist.
+                <br>
+                <br>
+                Convinced that the apparition is nothing more than a
+                vivid nightmare brought on by exhaustion and too many
+                pints of ale, you pull the blanket over your head and
+                decide to ignore it.
+                <br>
+                <br>
+                If you refuse to acknowledge the ghost, surely it will
+                disappear. For a few seconds, all is quiet. Then the
+                howling begins. The ghost lets out a furious shriek that
+                shakes the entire room. The air suddenly grows thick
+                and icy cold.
+                <br>
+                <br>
+                A cup launches itself from a shelf and smashes against
+                the wall beside your head. You leap from the bed.
+                <br>
+                <br>
+                Before you can react, a chair flies across the room and
+                crashes into your legs. Then a boot....then a
+                candlestick, a pillow.... Objects begin swirling around
+                the chamber in an unnatural vortex, striking you from
+                every direction.
+                <br>
+                <br>
+                The pain feels real, far too real. The shutters burst open.
+                <br>
+                <br>
+                A freezing wind floods the room, extinguishing the fire
+                and plunging the chamber into darkness.
+                <br>
+                <br>
+                The ghost's furious laughter echoes through the air.
+                <br>
+                <br>
+                Cold, bruised, and thoroughly terrified, you suddenly
+                regret following the maid's advice.
+                <br>
+                <br>
+                With a cry of panic, you fling open the door and sprint
+                into the corridor wearing nothing but your
+                undergarments. You do not stop running until you are
+                several doors away.
+                <br>
+                <br>
+                There, trembling and out of breath, you sit with your
+                back against the wall and stare at the door to Room 6.
+                <br>
+                <br>
+                Minutes pass, and thankfully nothing emerges.
+                <br>
+                <br>
+                Slowly, your heartbeat returns to normal. Perhaps the
+                ghost is unable to leave the room and you are finally
+                safe.
+                <br>
+                <br>
+                Exhaustion eventually overcomes fear.
+                <br>
+                <br>
+                Curled up on the cold wooden floor of the corridor, you
+                drift into an uneasy sleep.
+                <br>
+                <br>
+                As your eyes close, one final thought crosses your
+                mind: tomorrow, should you tell the innkeeper or keep
+                this crazy story to yourself?
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance="0"
+                data-success="option_b_1_b_1"
+                data-fail=""
+                data-success-trigger=''
+                data-fail-trigger=''
+
+                value="Tell the innkeeper"
+            >
+
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance="0"
+                data-success="option_b_1_b_2"
+                data-fail=""
+                data-success-trigger=''
+                data-fail-trigger=''
+
+                value="Keep the story to yourself"
+            >
+        </div>
+
+        <div class="story" id="option_b_1_b_1" style="display: none;">
+            <p>
+                The following morning, you awake stiff, cold, and more
+                exhausted than when you went to bed. You gather your
+                belongings and march downstairs, determined to demand
+                an explanation. The innkeeper is polishing tankards
+                behind the bar.
+                <br>
+                <br>
+                "I hope you slept well," he says with a smile.
+                <br>
+                <br>
+                "Slept well?" you reply indignantly. "Your Room 6 is
+                haunted! I was attacked by the ghost of a pirate with a
+                wooden leg. Furniture flew through the air, the windows
+                burst open, and I barely escaped with my life!"
+                <br>
+                <br>
+                The entire tavern falls silent. For a brief moment, everyone
+                stares at you. Then...the room erupts with laughter.
+                <br>
+                <br>
+                Several patrons are laughing so hard that tears stream
+                down their faces. One man nearly falls off his chair.
+                <br>
+                <br>
+                Another wipes his eyes and says, "That must have been
+                some exceptionally strong ale!"
+                <br>
+                <br>
+                The innkeeper struggles to keep a straight face.
+                <br>
+                <br>
+                "My dear traveller," he says, "I've heard many excuses
+                from guests hoping to avoid paying for a night's lodging...
+                but blaming a ghost is certainly the most creative."
+                <br>
+                <br>
+                More laughter fills the room. Red-faced and thoroughly
+                embarrassed, you pay your bill, collect your horse, and
+                leave the village as quickly as possible. As you ride away,
+                you glance back one last time at the tavern.
+                <br>
+                <br>
+                Standing at the upstairs window of Room 6 is a pale figure
+                with a wooden leg. The ghost removes his hat, gives you a
+                mischievous wink....and bursts into silent laughter.
+                <br>
+                <br>
+                You smile despite yourself. No one in Greenward will ever
+                believe your story, but at least you know the truth.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_1_b_2" style="display: none;">
+            <p>
+                The following morning, you awake stiff, cold, and
+                exhausted.
+                <br>
+                <br>
+                As you gather your belongings, you pause outside the
+                door of Room 6. Part of you wants to tell the innkeeper
+                everything. You imagine yourself describing the ghostly
+                pirate, the flying furniture, the freezing wind, and the
+                terrifying night you have endured. Then you stop....who
+                would believe such a tale?
+                <br>
+                <br>
+                You have always considered yourself a sensible man. If
+                someone had told you the same story only yesterday, you
+                would have laughed in their face. No....some experiences
+                are better kept to oneself.
+                <br>
+                <br>
+                Without mentioning a single word about the ghost, you
+                quietly pay for your night's lodging, thank the innkeeper,
+                collect your horse, and leave Greenward as quickly as you
+                can.
+                <br>
+                <br>
+                The road home is peaceful, yet your thoughts return again
+                and again to Room 6.
+                <br>
+                <br>
+                Weeks later, safely back among your family, you still find
+                yourself waking in the middle of the night whenever you
+                hear an unexpected creak in the house.
+                <br>
+                <br>
+                Whenever someone suggests stopping at an unfamiliar
+                tavern, you politely insist on travelling a little farther. And
+                from that day onwards, you always ask one simple
+                question before accepting a room: "Has anyone ever
+                complained about ghosts?"
+                <br>
+                <br>
+                Your friends laugh every time. You laugh with them, but
+                deep down, you know that you will never forget your pale
+                friend with a wooden leg.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_1_a" style="display:none;">
+            <p>
+                You can hardly believe your ears.
+                <br>
+                <br>
+                The tale of Willy Wooden-Leg and his hidden
+                treasure is known across the Seven Seas. Sailors,
+                merchants, and pirates alike tell stories of the
+                infamous corsair who amassed a fortune and
+                vanished before revealing where it was hidden.
+                <br>
+                <br>
+                And one part of the story is certainly true: Willy
+                Wooden-Leg was imprisoned in a remote village in
+                the east of England, where he eventually died
+                without ever disclosing the location of his treasure.
+                <br>
+                <br>
+                Perhaps this ghost is telling the truth.
+                <br>
+                <br>
+                You also remember another famous figure from the
+                tales: Charlotte, Willy's daughter. She is said to be
+                the only known female corsair in England,
+                renowned not only for her beauty but also for her
+                generosity towards the poor and the unfortunate.
+                <br>
+                <br>
+                If you could become rich while helping a deserving
+                person who would use the treasure for good, why
+                would you refuse?
+                <br>
+                <br>
+                Trusting a ghost may seem foolish, but a reward of
+                this magnitude is diƯicult to ignore.
+                <br>
+                <br>
+                "You have my word," you tell Willy. "Should I find
+                the treasure, Charlotte will receive her rightful half
+                share."
+                <br>
+                <br>
+                The ghost smiles for the first time.
+                <br>
+                <br>
+                "Then listen carefully," he says.
+                <br>
+                <br>
+                With a wave of his translucent hand, a map
+                appears in the air between you. Faded coastlines,
+                hidden coves, and mysterious landmarks glow
+                faintly in the moonlight.
+                <br>
+                <br>
+                Fearing the vision may disappear at any moment,
+                you hastily copy the map by scratching its details
+                onto a small piece of wood from the fireplace.
+                When you finish, the ghost nods approvingly.
+                <br>
+                <br>
+                Before you can ask any question, Willy Wooden-
+                Leg begins to fade into the darkness.
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                data-luck="true"
+                data-chance="50"
+                data-success="option_b_1_a_1"
+                data-fail="option_b_1_a_2"
+                data-success-trigger='[
+                                            {"action":"givePlayerXP","args":[25]},
+                                            {"action":"givePlayerItem","args":["Magnificent Ruby", 1, 64, true]}
+                                        ]'
+                data-fail-trigger=''
+
+                value="Begin Searching for the Treasure"
+            >
+        </div>
+
+        <div class="story" id="option_b_1_a_1" style="display:none;">
+            <p>
+                At first light, you leave Greenward with nothing but your
+                horse, your travelling pack, and the crude map you copied
+                from Willy Wooden-Leg's ghost.
+                <br>
+                <br>
+                For weeks you journey across England, following every
+                clue scratched onto the wooden tablet. The trail leads you
+                through dense forests, across windswept cliƯs, and into
+                lonely fishing villages where old sailors still whisper the
+                name of Willy Wooden-Leg.
+                <br>
+                <br>
+                At last, you reach a hidden cove where the black cliƯs
+                meet the sea. There, concealed beneath an ancient oak
+                tree marked with the faded carving of a skull, your spade
+                strikes something solid. Your heart races. After hours of
+                digging, you uncover a heavy oak chest bound with rusted
+                iron. With trembling hands, you force it open.
+                <br>
+                <br>
+                Inside lie hundreds of glittering gold coins, silver goblets,
+                strings of pearls, and jewels of every colour imaginable.
+                <br>
+                <br>
+                You have found the legendary treasure. Remembering
+                your promise, you set out to find Charlotte. After several
+                weeks of searching, you finally meet her in a small coastal
+                village. She is no longer the feared corsair of the stories
+                but a respected woman who quietly devotes her fortune
+                to caring for widows, orphaned children, and sailors
+                injured at sea. When you place half of the treasure before
+                her, she is speechless.
+                <br>
+                <br>
+                "My father chose wisely," she whispers. "Gold can make a
+                man wealthy, but only honesty can make him worthy."
+                <br>
+                <br>
+                As a token of her gratitude, Charlotte insists that you keep
+                a magnificent ruby, once worn by Willy himself.
+                <br>
+                <br>
+                "The treasure is divided," she says with a smile, "but your
+                kindness deserves a reward of its own." You return home
+                wealthier than you ever imagined. With your share, you
+                build a fine house for your family, expand your trading
+                business, and ensure that none of your loved ones ever
+                know hardship again. Years later, travellers still tell two
+                stories. One is the legend of Willy Wooden-Leg and his
+                hidden treasure. The other is the tale of the honest
+                traveller who kept his word, proving that the greatest
+                reward of all belongs to those whose honour cannot be
+                bought.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_b_1_a_2" style="display:none;">
+            <p>
+                At first light, you leave Greenward carrying nothing but
+                your horse, your travelling pack, and the map drawn from
+                Willy Wooden-Leg's ghostly directions. For weeks, you
+                follow the clues across forests, rivers, lonely cliƯs, and
+                windswept beaches. More than once you begin to doubt
+                the old pirate's tale, but each landmark matches the map
+                perfectly. At last, you arrive at a secluded cove where the
+                sea crashes against towering black cliƯs. Beneath an
+                ancient oak tree, your spade strikes wood. Your pulse
+                quickens. You dig furiously until a large iron-bound chest
+                emerges from the earth. "This is it," you whisper.
+                <br>
+                <br>
+                With trembling hands, you prise open the heavy lid. The
+                chest is... Empty. Well, almost. Resting in the centre is a
+                neatly folded piece of parchment. You unfold it. In untidy
+                handwriting, it reads: "Congratulations! You have
+                successfully found my empty chest. Did you really think a
+                pirate would trust a greedy stranger?”
+                <br>
+                <br>
+                You stare at the note in disbelief. Weeks of travelling,
+                blisters, rain. Hunger, endless digging......all for a
+                practical joke.
+                <br>
+                <br>
+                As if to make matters worse, a gust of wind slams the lid
+                of the chest shut with a loud BANG! For a brief moment,
+                you could swear you hear faint ghostly laughter echoing
+                across the cliffs.
+                <br>
+                <br>
+                Defeated, you climb back onto your horse and begin the
+                long journey home. From that day onwards, whenever
+                someone tells you that honesty is the best policy, you
+                simply sigh...and quietly agree.
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <!-- Option A.1 -->
+
+        <div class="story" id="option_a_1" style="display: none;">
+            <p>
+                With your forehead still
+                throbbing, you approach
+                him. Striding across the
+                tavern, you seize the
+                stranger by the front of
+                his tunic and slam him
+                against the wall. He is
+                smaller than you
+                expected, in a fair fight,
+                you are confident you
+                could easily defeat him,
+                but a dozen men leap to
+                their feet. Chairs scrape
+                across the floor. The
+                stranger says: "I don't
+                like strangers," he says.
+                "Especially fiery ones."
+                The tavern falls silent.
+                He continues: "In this
+                village, we do not settle
+                quarrels with fists. Every
+                man is given a chance to
+                prove his worth at the
+                butts. At sunrise, you
+                and I shall shoot three
+                arrows each. The better
+                archer wins the dispute."
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance=""
+                data-success="option_a_1_a"
+                data-fail=""
+                data-success-trigger='[
+                                            {"action":"givePlayerXP","args":[20]}
+                                        ]'
+                data-fail-trigger=""
+
+                value="You accept the challenge."
+            >
+
+            <input type="button" class="choice-btn"
+
+                data-luck="false"
+                data-chance=""
+                data-success="option_a_1_b"
+                data-fail=""
+                data-success-trigger=''
+                data-fail-trigger=''
+
+                value="You sneak off before sunrise."
+            >
+        </div>
+
+        <div class="story" id="option_a_1_a" style="display: none;">
+            <p>
+                At sunrise, you arrive promptly at the butts. A crowd has already
+                gathered, eager to witness the contest. Men, women, and children
+                line the field, murmuring excitedly as they watch the preparations.
+                <br>
+                <br>
+                You feel confident in your archery skills and, truthfully, you admire
+                the civil way this strange village settles its disputes. Still, before
+                agreeing to compete, you want to know exactly what is at stake.
+                <br>
+                <br>
+                Standing in the centre of the field is the Challenge Master, an
+                elderly man holding two longbows and a bundle of ten arrows. "It is
+                wise of you to ask," he says. He gestures toward the villagers.
+                <br>
+                <br>
+                "You should first know that Greenwalt is famous for its archers. The
+                secrets of the bow have been passed down through generations."
+                <br>
+                <br>
+                The Duel Master pauses before continuing. "An archery contest is
+                how we settle disputes. If you win, you will be rewarded for your
+                bravery and skill. Your honour will be recognised, and the village will
+                owe you a debt." The crowd nods approvingly.
+                <br>
+                <br>
+                "But if you lose," he says gravely, "the people of Greenwalt shall
+                decide your fate. For one full day, you must serve the village and
+                obey the tasks assigned to you."
+                <br>
+                <br>
+                A ripple of laughter spreads through the crowd. Some villagers grin
+                mischievously. Others exchange knowing glances. The stranger who
+                challenged you smiles. "Do not worry, traveller," he says. "Most
+                survive the experience."
+                <br>
+                <br>
+                The crowd erupts in laughter once more.
+                <br>
+                <br>
+                The Duel Master raises a hand for silence.
+                <br>
+                <br>
+                "Now you understand what is at stake," he declares. He points
+                towards two chalk circles marked on the ground.
+                <br>
+                <br>
+                "Take your place in the circles. The contest is about to begin."
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="true"
+                    data-chance="50"
+
+                    data-success="option_a_1_a_1"
+                    data-fail="option_a_1_a_2"
+
+                    data-success-trigger='[
+                                            {"action":"givePlayerXP","args":[80]}
+                                        ]'
+                    data-fail-trigger='[
+                                            {"action":"takeDamage","args":[50]},
+                                            {"action":"givePlayerXP","args":[100]}
+                                        ]'
+
+                    value="Continue with the contest"
+            >
+        </div>
+
+        <div class="story" id="option_a_1_a_1" style="display: none;">
+            <p>
+                You take your place in the circle and nock your first arrow. The crowd
+                falls silent. Drawing the bowstring back, you take careful aim and
+                release. The arrow flies straight and true, striking the centre of the target.
+                <br>
+                <br>
+                A murmur of surprise spreads through the villagers. Your opponent
+                seems momentarily unsettled. He had clearly not expected an outsider
+                to possess such skill with a bow.
+                <br>
+                <br>
+                Then he takes his turn.
+                <br>
+                <br>
+                His arrow cuts through the morning air and lands perfectly in the centre
+                of the target.
+                <br>
+                <br>
+                The crowd erupts in applause.
+                <br>
+                <br>
+                Your confidence wavers, but you steady your breathing and focus on the
+                next shot.
+                <br>
+                <br>
+                Again, your arrow finds the centre. And again, your opponent matches it
+                perfectly.
+                <br>
+                <br>
+                The contest continues in this fashion, arrow after arrow. Each shot is
+                met with gasps and cheers as the two of you demonstrate remarkable
+                accuracy.
+                <br>
+                <br>
+                Soon, only one arrow remains. Your opponent steps forward to take the
+                final shot. If he succeeds, he will win the challenge. If he fails, victory will
+                be yours.
+                <br>
+                <br>
+                The village watches in complete silence. The stranger raises his bow and
+                takes aim.
+                <br>
+                <br>
+                Then, at the worst possible moment, a sudden gust of wind sweeps dust
+                into his face. His nose twitches. He tries to resist, but fails.
+                A mighty sneeze bursts from him just as he releases the string. The arrow
+                flies wildly past the target. For a moment, nobody speaks.
+                You can hardly believe your luck, you have won.
+                <br>
+                <br>
+                The crowd's reaction is far from cheerful. Whistles and groans echo
+                across the field, and several villagers call for the contest to be repeated.
+                But the Duel Master remains unmoved. "A shot released is a shot
+                judged," he declares. "The contest is over. The traveller has won. May
+                satisfaction and pride be his reward"
+                <br>
+                <br>
+                The villagers reluctantly and quietly accept the verdict. You expected to
+                be cheered, or a heftier reward, but truthfully, you are simply relieved.
+                Your journey has been long and dangerous. You have faced storms,
+                thieves, and countless hardships upon the road.
+                <br>
+                <br>
+                Now, home is only a day's ride away.
+                <br>
+                <br>
+                As you mount your horse and leave Greenwalt behind, you cannot help
+                but smile. Your family awaits you, eager to hear tales of your adventures.
+                And among them all, none will be more remarkable than the story of the
+                traveller who became the first outsider ever to defeat a villager of
+                Greenwalt in an archery contest.
+
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_1_a_2" style="display: none;">
+            <p>
+                You take your place in the circle and nock your first arrow.
+                <br>
+                <br>
+                The crowd falls silent. Drawing the bowstring, you take careful aim
+                and release. The arrow flies straight and true, striking the target. The
+                villagers exchange surprised glances, but none of them seems
+                particularly concerned. Your confidence fades when your opponent
+                calmly steps forward.
+                <br>
+                <br>
+                His arrow whistles through the morning air and lands eƯortlessly in
+                the very centre of the target. You swallow nervously. This man is no
+                ordinary archer. The following rounds only confirm your fears. Your
+                next arrows drift wide of the centre, and two even miss the target
+                altogether.
+                <br>
+                <br>
+                Meanwhile, your opponent shoots with astonishing precision,
+                placing every arrow neatly beside the last.
+                <br>
+                <br>
+                When the final score is announced, there is no doubt: you have lost.
+                The Duel Master steps forward.
+                <br>
+                <br>
+                "By the ancient customs of Greenwalt," he proclaims, "the loser
+                must serve the village for one full day." You sigh with relief….’A day of
+                carrying water or sweeping the square?... That doesn't sound too
+                bad’. The Duel Master smiles.
+                <br>
+                <br>
+                "You shall repair our roads." Several villagers burst into applause.
+                "For years," he continues, "we have waited for a strong traveller
+                foolish enough to accept the challenge."
+                <br>
+                <br>
+                The crowd laughs. "We've been meaning to fix those dreadful roads
+                for ages." A large cart piled high with stones, mortar, shovels, and
+                tools is wheeled in front of you. "Oh, and one more thing," says the
+                Duel Master with a grin. "To keep your spirits high, the villagers are
+                permitted to encourage you by throwing eggs and rotten vegetables."
+                A basket of rotten cabbages is immediately distributed among the
+                crowd. You stare in disbelief. Perhaps accepting the challenge had
+                not been your wisest decision.
+                <br>
+                <br>
+                The hours that follow are the longest and most exhausting of your
+                life. You haul stones. You spread mortar. You hammer. You sweat.
+                Every few minutes, an egg explodes against your back. A rotten
+                cabbage narrowly misses your head.
+                <br>
+                <br>
+                Some mischievous child discovers that overripe tomatoes are
+                remarkably accurate projectiles.
+                <br>
+                <br>
+                The laughter of the villagers echoes through the valley from dawn
+                until dusk. By sunset, however, something extraordinary has
+                happened. The once muddy, uneven road through Greenwalt has
+                become the finest road for miles around.
+                <br>
+                <br>
+                The Mayor proudly inspects your work. "Well done, stranger," he
+                declares. "You may have lost the contest, but you have done our
+                village a great service."
+                <br>
+                <br>
+                He shakes your aching hand. "From this day forward, you shall
+                always be welcome in Greenwalt as an honoured guest." You force a
+                tired smile. Honour is all very well. But as you limp away from the
+                village with egg dripping from your hat and cabbage leaves clinging
+                to your cloak, you make yourself one solemn promise: You will
+                never, ever challenge a Greenwalt villager to an archery contest
+                again.
+
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_1_b" style="display: none;">
+            <p>
+                After your meal, you retire to your room, but sleep refuses
+                to come.
+                <br>
+                <br>
+                Your mind is troubled by the challenge awaiting you at
+                dawn.
+                <br>
+                <br>
+                You know that refusing the contest would be seen as
+                cowardly, especially after confronting the stranger so boldly
+                before the entire tavern. Yet your journey is almost at an
+                end. Along the way, you have survived storms, pirates,
+                highwaymen, and countless dangers. The thought of risking
+                your life over a spoon thrown by a fool seems increasingly
+                absurd. Besides, the people of Greenwalt are renowned for
+                their archery. The bow is their pride and heritage, while you
+                have always been far more skilled with a sword than an
+                arrow. The longer you think about it, the more obvious the
+                answer becomes.
+                <br>
+                <br>
+                Under the cover of darkness, you quietly gather your
+                belongings and make your way downstairs. The tavern is
+                silent. Outside, your horse rests peacefully beneath a
+                shelter. Nearby, the stable boy snores softly in a wooden
+                chair.
+                <br>
+                <br>
+                Careful not to make a sound, you begin saddling your horse.
+                <br>
+                <br>
+                Then disaster strikes. As you untie the reins, your elbow
+                accidentally bumps the horse in the neighbouring stall.
+                <br>
+                <br>
+                The startled animal lets out a loud, piercing neigh. The
+                stable boy jerks awake. For a moment, he stares at you in
+                confusion. Then his eyes widen. "The challenged foreigner
+                is running away!" he shouts at the top of his lungs.
+                <br>
+                <br>
+                Lights immediately flare to life across the village.
+                <br>
+                <br>
+                Doors burst open.
+                <br>
+                <br>
+                And from somewhere in the darkness, you hear the
+                unmistakable sound of dozens of footsteps running
+                towards the stables.
+            </p>
+
+            <input type="button" class="choice-btn"
+
+                    data-luck="true"
+                    data-chance="50"
+
+                    data-success="option_a_1_b_1"
+                    data-fail="option_a_1_b_2"
+
+                    data-success-trigger='[
+                                            {"action":"takeDamage","args":[80]}
+                                            {"action":"givePlayerXP","args":[10]}
+                                        ]'
+                    data-fail-trigger='[
+                                            {"action":"takeDamage","args":[10]},
+                                            {"action":"givePlayerXP","args":[200]}
+                                        ]'
+
+                    value="Escape"
+            >
+        </div>
+
+        <div class="story" id="option_a_1_b_1" style="display: none;">
+            <p>
+                Before you can even think of escaping, villagers appear
+                from every direction, astonishingly alert for the middle of
+                the night. You rush towards your horse, hoping to mount it
+                before anyone can stop you.
+                <br>
+                <br>
+                Too late.
+                <br>
+                <br>
+                Just as you place a foot in the stirrup, the village sheriƯ
+                grabs you by the shoulders and pulls you to the ground. A
+                moment later, you hear the unmistakable click of iron
+                handcuƯs locking around your wrists. Your escape has
+                failed…
+                <br>
+                <br>
+                You spend the remainder of the night in a damp, musty
+                prison cell beneath the village hall. The following morning,
+                you are brought before a makeshift tribunal presided over
+                by the sheriƯ himself. He listens to the accusations before
+                solemnly announcing his judgement. "You accepted the
+                challenge before the people of Greenwalt," he declares.
+                "Then you attempted to flee like a coward. By mocking our
+                sacred customs, you have dishonoured both yourself and
+                this village." He stares at you severely: "I sentence you to
+                one month in the village prison."
+                <br>
+                <br>
+                The sentence proves far worse than you imagined. Each day
+                is almost identical to the last. Breakfast consists of stale
+                bread. Lunch consists of stale bread. Supper... is slightly
+                older stale bread.
+                <br>
+                <br>
+                The rats soon become your closest companions. After a
+                week, you begin giving them names. After two weeks, you
+                find yourself looking forward to the daily visit of a single fly
+                that buzzes lazily around your cell. By the end of the month,
+                you are almost sad to see it leave through a crack in the
+                wall.
+                <br>
+                <br>
+                The experience gives you plenty of time to reflect.
+                Perhaps you should never have accepted the challenge.
+                Or perhaps you should simply have faced it with dignity.
+                Either way, one lesson is certain: the people of Greenwalt
+                are the strangest folk you have ever encountered.
+                When your sentence finally ends, you mount your horse
+                without looking back and make yourself one solemn
+                promise: no matter how tired you are, you will never again
+                spend the night in Greenwalt.
+
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+
+        <div class="story" id="option_a_1_b_2" style="display: none;">
+            <p>
+                The stable boy's cry echoes through the village.
+                <br>
+                <br>
+                "The challenged foreigner is running away!"
+                <br>
+                <br>
+                Lights spring to life behind windows. Doors fly open.
+                <br>
+                <br>
+                Without a second thought, you leap into the saddle and dig
+                your heels into your horse's flanks.
+                <br>
+                <br>
+                The animal bolts forward just as several villagers rush into
+                the stable yard. "Stop him!" someone shouts.
+                <br>
+                <br>
+                A shower of arrows whistles through the darkness.
+                <br>
+                <br>
+                One strikes a fence post inches from your head. Another
+                buries itself in the road just ahead of your horse.
+                <br>
+                <br>
+                You dare not look back.
+                <br>
+                <br>
+                Your faithful horse gallops through the sleeping
+                countryside, splashing across streams, jumping fallen logs,
+                and weaving between ancient oak trees. Behind you, the
+                angry voices gradually fade into the distance.
+                <br>
+                <br>
+                By the time the first rays of sunlight appear, Greenwalt is
+                nothing more than a speck on the horizon.
+                <br>
+                <br>
+                You slow your horse and finally allow yourself a smile.
+                You have escaped.
+                <br>
+                <br>
+                The remainder of your journey passes without incident, and
+                a few days later you arrive safely home, where your family
+                greets you with warm embraces and a hearty meal.
+                <br>
+                <br>
+                When they ask about your adventures, you tell them many
+                stories, but somehow leave out the part about fleeing an
+                archery challenge in the middle of the night….some tales
+                are better left untold.
+                <br>
+                <br>
+                Years later, whenever your trading routes take you anywhere
+                near Greenwalt, you make a considerable detour.
+                <br>
+                <br>
+                Not because you fear the villagers...but because you have
+                no wish to discover whether they are still waiting for the
+                foreign merchant who never kept his appointment at the
+                butts.
+
+                <br>
+                <br>
+                <br>
+                <span class="endText">The End</span>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Don't flame me for this this is where I chose to put it not in head -->
+    <script src="script.js"></script>
+</body>
+</html>

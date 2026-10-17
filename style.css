@@ -1,0 +1,258 @@
+body{
+    background-color: Grey;
+}
+
+#game{
+    width: 600px;
+    height: auto;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+#startBox{
+    width: 600px;
+    height: 200px;
+    margin: 0 auto;
+
+    background-color: black;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+#startButton{
+    width: 100px;
+    height: 30px;
+}
+
+h1{
+    color: white;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+dialog {
+    background-color: black;
+    border-color: lightgrey;
+    
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+dialog h1 {
+    color: red;
+}
+
+.BIGGER {
+    font-size: 4rem;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+p{
+    color: white;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.hud-menu {
+    position: fixed;
+    top: 20px;
+    width: 25%;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+.hud-menu p {
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: left;
+    font-size: larger;
+}
+
+.bar {
+    position: relative;
+    width: 100%;
+    height: 20px; /* works instantly */
+    background-color: #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+#xpShi {
+    height: 30px;
+}
+
+#fill-health {
+    height: 100%;
+    width: 100%;
+    background-color: Red;
+    transition: width 0.3s ease;
+}
+
+#fill-xp {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: Green;
+    transition: width 0.3s ease;
+}
+
+.level-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    color: white;
+    font-weight: bold;
+    z-index: 2;
+    pointer-events: none; /* so clicks pass through */
+}
+
+#hud-left {
+    left: 20px;
+}
+
+#hud-right {
+    right: 20px; 
+}
+
+.controlButton {
+    border: dashed;
+    border-color: #bababa;
+
+    padding: 0;
+    cursor: pointer;
+    margin: 0 20px;
+}
+
+.middle {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.controlButtons{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.story{
+    width: 600px;
+    height: auto;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.old-story {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.hide {
+    display: none;
+}
+
+.goodStatusChange {
+    color: green;
+}
+
+.badStatusChange {
+    color: red;
+}
+
+.goodStatusChange, .badStatusChange {
+    margin: 0 !important;
+    padding-top: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    
+    align-self: flex-start; 
+    text-align: left;
+
+    padding-left: 20px; 
+}
+
+ul {
+    font-size: 1.1rem;
+}
+
+.effects-columns {
+    display: flex;
+    gap: 10px;
+}
+
+.effects-column {
+    flex: 1;
+    min-width: 0;
+}
+
+.effects-column-title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 2px;
+}
+
+.story p {
+    margin-bottom: 5px; 
+}
+
+.animation{
+    animation: enterAnimation 0.5s 1 ease-out;
+}
+
+.endText{
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+@keyframes enterAnimation{
+    0%{
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    75%{opacity: 1;}
+    100%{transform: translateY(0px);}
+}
