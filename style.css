@@ -138,13 +138,32 @@ p{
     right: 20px; 
 }
 
-.controlButton {
-    border: dashed;
-    border-color: #bababa;
+.controlButtons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
 
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.controlButton {
+    flex: 1 1 0;       /* each button takes an equal share of the row */
+    min-width: 0;      /* lets them shrink instead of overflowing */
+    max-width: 100px;  /* optional: stops them getting huge on big screens */
     padding: 0;
+    border: none;
+    background: white;
     cursor: pointer;
-    margin: 0 20px;
+}
+
+.controlButton img {
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .middle {
@@ -153,17 +172,6 @@ p{
     flex-direction: row;
     align-items: center;
     padding-bottom: 40px;
-}
-
-.controlButtons{
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
-
-    background-color: black;
-    border: 2px solid black;
-    border-radius: 10px;
 }
 
 .story{
