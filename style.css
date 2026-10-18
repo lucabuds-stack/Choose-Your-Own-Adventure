@@ -1,9 +1,35 @@
-body{
-    background-color: Grey;
+/* THIS FILE WAS HEAVILY AFFECTED BY AI DUE TO ADDING READING MODE, RESPONSIVE SCALING, AND ORGANIZATION. */
+
+/* ============================================================
+   GLOBAL / RESPONSIVE BASICS
+   ============================================================ */
+
+/* border-box makes width include padding + border.
+   Without this, "width: 100%" plus padding ends up WIDER than the screen,
+   which is a classic cause of sideways scrolling on phones. */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-#game{
-    width: 600px;
+:root {
+    /* A CSS variable: define the story width ONCE here, then reuse it with var(--story-width).
+       The HUD size below is calculated from it, so they always stay in sync. */
+    --story-width: 600px;
+}
+
+body {
+    background-color: Grey;
+    margin: 0;
+    padding: 10px;        /* small breathing room so nothing touches the screen edge */
+}
+
+/* ============================================================
+   MAIN GAME AREA
+   ============================================================ */
+
+#game {
+    width: 100%;          /* shrink to fit small screens... */
+    max-width: var(--story-width);     /* ...but never get wider than this */
     height: auto;
     margin: 0 auto;
 
@@ -14,10 +40,12 @@ body{
     align-items: center;
 }
 
-#startBox{
-    width: 600px;
-    height: 200px;
+#startBox {
+    width: 100%;
+    max-width: var(--story-width);
+    min-height: 200px;    /* min-height instead of height so text can grow the box if it needs to */
     margin: 0 auto;
+    padding: 10px;
 
     background-color: black;
     color: white;
@@ -31,22 +59,43 @@ body{
     border-radius: 10px;
 }
 
-#startButton{
+#startButton {
     width: 100px;
     height: 30px;
 }
 
-h1{
+h1 {
+    color: white;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: clamp(1.4rem, 6vw, 2rem);   /* clamp(min, preferred, max): scales with screen width */
+}
+
+p {
     color: white;
     align-items: center;
     text-align: center;
     font-family: Arial, sans-serif;
 }
 
+.BIGGER {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+/* ============================================================
+   DIALOG POP-UPS
+   ============================================================ */
+
 dialog {
     background-color: black;
     border-color: lightgrey;
-    
+
+    width: 90%;           /* on phones the popup fills most of the screen */
+    max-width: 500px;     /* on desktop it stays a sensible size */
+
     align-items: center;
     text-align: center;
     font-family: Arial, sans-serif;
@@ -56,30 +105,34 @@ dialog h1 {
     color: red;
 }
 
-.BIGGER {
-    font-size: 4rem;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+dialog a {
+    overflow-wrap: anywhere;   /* long credit links can break onto a new line instead of overflowing */
 }
 
-p{
+#normal {
     color: white;
-    align-items: center;
-    text-align: center;
-    font-family: Arial, sans-serif;
 }
+
+/* ============================================================
+   HUD (health / xp / buttons)
+   ============================================================ */
 
 .hud-menu {
     position: fixed;
     top: 20px;
-    width: 25%;
+    /* Width = the smallest of these three:
+       - 25vw: a quarter of the screen width (vw = 1% of the viewport width)
+       - 820px: a cap so it doesn't get silly on ultrawide monitors
+       - the space left on each side of the story box (minus 20px gap from the screen edge),
+         which guarantees the HUD can never overlap the story */
+    width: min(25vw, 820px, calc(50vw - var(--story-width) / 2 - 20px));
     padding: 10px;
     background-color: black;
     color: white;
     border: 1px solid #333;
     border-radius: 8px;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: clamp(14px, 0.9vw, 24px);   /* grows with the screen, 14px minimum */
     z-index: 1000;
 }
 
@@ -93,14 +146,14 @@ p{
 .bar {
     position: relative;
     width: 100%;
-    height: 20px; /* works instantly */
+    height: 1.4em; /* em = relative to the font size, so the bar grows with the HUD text */
     background-color: #333;
     border-radius: 6px;
     overflow: hidden;
 }
 
 #xpShi {
-    height: 30px;
+    height: 2.1em;
 }
 
 #fill-health {
@@ -123,7 +176,7 @@ p{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     color: white;
     font-weight: bold;
     z-index: 2;
@@ -135,7 +188,17 @@ p{
 }
 
 #hud-right {
-    right: 20px; 
+    right: 20px;
+}
+
+#github {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 150px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 .controlButtons {
@@ -153,11 +216,12 @@ p{
 .controlButton {
     flex: 1 1 0;       /* each button takes an equal share of the row */
     min-width: 0;      /* lets them shrink instead of overflowing */
-    max-width: 100px;  /* optional: stops them getting huge on big screens */
-    padding: 0;
+    max-width: 150px;  /* stops them getting huge on very big screens */
+    padding: 5px;
     border: none;
     background: white;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .controlButton img {
@@ -174,8 +238,13 @@ p{
     padding-bottom: 40px;
 }
 
-.story{
-    width: 600px;
+/* ============================================================
+   STORY BOXES
+   ============================================================ */
+
+.story {
+    width: 100%;
+    max-width: var(--story-width);
     height: auto;
     margin: 0 auto;
     padding-bottom: 20px;
@@ -192,15 +261,39 @@ p{
     border-radius: 10px;
 }
 
+.story p {
+    margin-bottom: 5px;
+}
+
+/* Choice buttons: input buttons don't wrap their text by default,
+   so long choices like "Help Gregory prove ownership of the quiver"
+   would stick out of the box on a narrow screen. */
+.choice-btn {
+    white-space: normal;      /* allow the text to wrap onto multiple lines */
+    max-width: 100%;          /* never wider than the story box */
+    margin: 4px;
+    padding: 8px 14px;        /* bigger tap target for fingers */
+    font-size: 1rem;
+}
+
 .old-story {
-  opacity: 0.4;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
+    opacity: 0.4;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
 }
 
 .hide {
     display: none;
 }
+
+.endText {
+    font-weight: bold;
+    font-size: clamp(1.8rem, 9vw, 3rem);
+}
+
+/* ============================================================
+   EFFECTS / INVENTORY (currently commented out in the HTML)
+   ============================================================ */
 
 .goodStatusChange {
     color: green;
@@ -215,11 +308,11 @@ p{
     padding-top: 4px;
     font-size: 14px;
     font-weight: bold;
-    
-    align-self: flex-start; 
+
+    align-self: flex-start;
     text-align: left;
 
-    padding-left: 20px; 
+    padding-left: 20px;
 }
 
 ul {
@@ -242,25 +335,158 @@ ul {
     margin-bottom: 2px;
 }
 
-.story p {
-    margin-bottom: 5px; 
-}
+/* ============================================================
+   ANIMATION
+   ============================================================ */
 
-.animation{
+.animation {
     animation: enterAnimation 0.5s 1 ease-out;
 }
 
-.endText{
-    font-weight: bold;
-    font-size: 3rem;
-}
-
-@keyframes enterAnimation{
-    0%{
+@keyframes enterAnimation {
+    0% {
         transform: translateY(-50px);
         opacity: 0;
     }
 
-    75%{opacity: 1;}
-    100%{transform: translateY(0px);}
+    75% { opacity: 1; }
+    100% { transform: translateY(0px); }
+}
+
+/* ============================================================
+   SMALL SCREENS (media queries)
+   A media query only applies when its condition is true.
+   Keep these at the BOTTOM so they override the rules above.
+   ============================================================ */
+
+/* Story is 600px wide, centred. Each HUD is 280px + 20px from the edge = 300px.
+   600 + 300 + 300 = 1200px. Below that, the HUDs would overlap the story,
+   so we stop pinning them to the sides and stack them above it instead. */
+@media (max-width: 1200px) {
+    .hud-menu {
+        position: static;     /* back in the normal page flow (no longer floating) */
+        width: 100%;
+        max-width: 600px;     /* same width as the story box so it all lines up */
+        margin: 0 auto 10px auto;
+    }
+
+    /* The left/right offsets only matter for fixed positioning, but resetting
+       them keeps things tidy */
+    #hud-left, #hud-right {
+        left: auto;
+        right: auto;
+    }
+}
+
+/* Big monitors: make the story box wider and the text a bit bigger.
+   Changing the variable here updates the story boxes AND the HUD maths automatically. */
+@media (min-width: 1600px) {
+    :root {
+        --story-width: 760px;
+    }
+
+    .story p {
+        font-size: 1.15rem;
+    }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+    body {
+        padding: 6px;
+    }
+
+    .hud-menu {
+        padding: 8px;
+    }
+
+    .hud-menu p {
+        font-size: medium;    /* smaller than "larger" so the labels fit on one line */
+    }
+
+    .story {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .story p {
+        font-size: 0.95rem;
+    }
+}
+
+/* ============================================================
+   READING MODE
+   Turned on by adding the class "reading-mode" to <body> (see script.js).
+   Every rule below starts with "body.reading-mode", so none of it
+   does anything until that class is present.
+   ============================================================ */
+
+/* The exit button is hidden normally, and only appears in reading mode */
+#exitReadMode {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+
+    width: 44px;
+    padding: 5px;
+    border: none;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.6;          /* faded so it doesn't distract from the text */
+}
+
+#exitReadMode:hover {
+    opacity: 1;
+}
+
+#exitReadMode img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+body.reading-mode #exitReadMode {
+    display: block;
+}
+
+/* Hide the HUD (health, XP and the control buttons) */
+body.reading-mode .hud-menu {
+    display: none;
+}
+
+/* Hide the "+10 XP" / "- 10 Health" lines under each scene */
+body.reading-mode .goodStatusChange,
+body.reading-mode .badStatusChange {
+    display: none;
+}
+
+/* Darker page so the story boxes blend in instead of floating on grey */
+body.reading-mode {
+    background-color: #111;
+}
+
+/* Give the text more room */
+body.reading-mode #game,
+body.reading-mode #startBox,
+body.reading-mode .story {
+    max-width: 800px;
+}
+
+/* Bigger, left-aligned text with more space between lines */
+body.reading-mode .story p {
+    font-size: clamp(1.05rem, 1rem + 0.5vw, 1.3rem);
+    line-height: 1.7;
+    text-align: left;
+}
+
+body.reading-mode .story {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+body.reading-mode .choice-btn {
+    font-size: 1.1rem;
 }

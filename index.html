@@ -25,6 +25,25 @@
         </form>
     </dialog>
 
+    <dialog id="creditsDialog">
+        <h1 id="normal"><b>Credits:</b></h1>
+        <p>
+            Programming: <em>Luca Michel</em><br>
+            Story Writing: <em>Francesca Giansanti</em><br>
+            <br>
+            ---<br>
+            <br>
+            <a href="https://www.github.com/">GitHub Icon and Page Hosting: GitHub</a><br>
+            <a href="https://fonts.google.com/icons">Restart Icon: Google Fonts</a><br>
+            <a href="https://www.flaticon.com/free-icons/comment" title="comment icons">Comment icon created by Magnific - Flaticon</a><br>
+            <a href="https://www.flaticon.com/free-icons/open-book" title="open book icons">Open book icon created by Karyative - Flaticon</a>
+        </p>
+
+        <form method="dialog">
+            <button>Okay</button>
+        </form>
+    </dialog>
+
     <dialog id="notAdded">
         <h1><b>Aw, man...</b></h1>
         <p>This feature doesn't exist yet. The creator might change that, if he feels like it.</p>
@@ -55,24 +74,23 @@
 
     <!-- Top Right Hud Menu -->
     <div class="hud-menu" id="hud-right">
-
-        <h1 class="BIGGER"><b>Controls:</b></h1>
-        <p class="middle">Work in progress. Only restart reverts progress.</p>
         <div class="controlButtons">
-            <button type="button" class="controlButton" id="back">
-                <img src="resources/back.png" alt="Back">
-            </button>
-
             <button type="button" class="controlButton" id="restart">
                 <img src="resources/restart.png" alt="Restart">
             </button>
 
-            <button type="button" class="controlButton" id="forward">
-                <img src="resources/forward.png" alt="Forward">
+            <a href="https://github.com/lucabuds-stack/Choose-Your-Own-Adventure" target="_blank" class="controlButton">
+                <button type="button" id="github">
+                    <img src="resources/github.png" alt="GitHub">
+                </button>
+            </a>
+
+            <button type="button" class="controlButton" id="credits">
+                <img src="resources/credits.png" alt="Credits">
             </button>
 
-            <button type="button" class="controlButton" id="toFront">
-                <img src="resources/toFront.png" alt="Go to Front">
+            <button type="button" class="controlButton" id="readMode">
+                <img src="resources/book.png" alt="Reading Mode">
             </button>
         </div>
 
@@ -103,6 +121,9 @@
         </div> -->
     </div>
 
+    <button type="button" id="exitReadMode" title="Exit Reading Mode">
+    <img src="resources/book.png" alt="Exit Reading Mode">
+    </button>
 
     <!-- TEMPLATE FOR CHOICE BUTTONS -!>
         <input type="button" class="choice-btn"

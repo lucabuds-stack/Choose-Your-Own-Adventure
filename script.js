@@ -77,14 +77,16 @@ let playerInventory = {};
 // Variables \\
 
 const dialogRestart = document.getElementById("restart-pop-up");
+const dialogCredits = document.getElementById("creditsDialog");
 const buttonRestartContinue = document.getElementById("continueRestart");
 
 const dialogNotAdded = document.getElementById('notAdded');
 
-const backButton = document.getElementById('back');
 const restartButton = document.getElementById('restart');
-const forwardButton = document.getElementById('forward');
-const toFrontButton = document.getElementById('toFront');
+const creditsButton = document.getElementById('credits');
+
+const readModeButton = document.getElementById('readMode');          // The book button in the HUD (turns reading mode ON)
+const exitReadModeButton = document.getElementById('exitReadMode');  // The small button that appears in reading mode (turns it OFF)
 
 const healthDisplay = document.getElementById("health-display");
 const maxHealthDisplay = document.getElementById("max-health-display");
@@ -106,10 +108,19 @@ const eventTriggers = {
 
 // Functions \\
 
-backButton.addEventListener('click', function(){dialogNotAdded.showModal();});
 restartButton.addEventListener('click',function(){dialogRestart.showModal();}); // Show the pop-up when resetting.
-forwardButton.addEventListener('click', function(){dialogNotAdded.showModal();});
-toFrontButton.addEventListener('click', function(){dialogNotAdded.showModal();});
+creditsButton.addEventListener('click', function(){dialogCredits.showModal();}); // Show credits
+
+// Reading mode: adds/removes the "reading-mode" class on <body>. The CSS does all the visual changes.
+function setReadingMode(on) {
+    document.body.classList.toggle('reading-mode', on); // true = force the class on, false = force it off
+}
+
+readModeButton.addEventListener('click', function(){ setReadingMode(true); });      // Enter reading mode
+exitReadModeButton.addEventListener('click', function(){ setReadingMode(false); }); // Leave reading mode
+document.addEventListener('keydown', function(event){                               // Escape also leaves reading mode
+    if (event.key === 'Escape') setReadingMode(false);
+});
 
 // Continuing in pop-up.
 buttonRestartContinue.addEventListener('click', function() {
